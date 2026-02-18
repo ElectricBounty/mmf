@@ -55,6 +55,8 @@ styled_statement("MINI MOVIE FUNDRAISER", "*", 5)
 # instructions
 show_instructions = str_checker("Would you like to view the instructions? ", ["yes","no"],1,"Please enter yes or no.")
 
+print()
+
 # if the user wants to view instructions show them
 if show_instructions == "yes":
     styled_statement("INSTRUCTIONS", "-", 3)
@@ -64,18 +66,37 @@ if show_instructions == "yes":
         "instruction 3",
         "have fun buying tickets??"
     ])
-    print('''
-    For each ticket holder enter ...
-    - Their name
-    - Their age
-    - Their payment method
-    
-    The program will record the ticket sale and calculate the ticket cost (and profit).
-    
-    Once you have entered all of the tickets, or entered the exit code (xxx), the program will display
-    the ticket sales information and write the data to a text file.
-    
-    It will also choose one lucky ticket winner who wins the draw (their ticket is free).
+    print('''For each ticket holder enter ...
+- Their name
+- Their age
+- Their payment method
+
+The program will record the ticket sale and calculate the ticket cost (and profit).
+
+Once you have entered all of the tickets, or entered the exit code (xxx), the program will display
+the ticket sales information and write the data to a text file.
+
+It will also choose one lucky ticket winner who wins the draw (their ticket is free).
     ''')
 
 # begin program
+
+# init ticket numbers
+
+MAX_TICKETS = 5
+tickets_sold = 0
+
+# loop for selling tickets
+while tickets_sold < MAX_TICKETS:
+    name = input("Name: ")
+
+    # break if exit code
+    if name.lower() == "xxx":
+        break
+
+    tickets_sold += 1
+
+if tickets_sold == MAX_TICKETS:
+    print(f"All {MAX_TICKETS} tickets have been sold.")
+else:
+    print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
