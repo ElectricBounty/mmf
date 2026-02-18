@@ -15,22 +15,15 @@ def str_checker(question, available_choices, num_letters, error):
 
         print(error)
 
-def num_check(question, error, num_type, exitcode=None):
-    """Catches any numbers that are invalid or in a range, allow programmer to set num_type"""
-
-    # define change_to variable as either the int function or the float function
-    if num_type == "int":
-        change_to = int
-    else:
-        change_to = float
+def int_check(question, error):
+    """only accept integers"""
 
     while True:
         try:
             # ask user for a number
             response = input(question)
-            if response.lower() == exitcode:
-                return exitcode
-            return change_to(response)
+
+            return int(response)
 
         # checks that number is valid
         except ValueError:
@@ -38,14 +31,7 @@ def num_check(question, error, num_type, exitcode=None):
 
 def styled_statement(statement, decoration, multiplier):
     """Displays a statement with a certain number of decorations on each side"""
-    print(f"\n{decoration * multiplier} {statement} {decoration * multiplier}")
-
-def styled_instructions(symbol, array):
-    """takes an array of sentences and formats them into a bullet-pointed list"""
-
-    # iterate through array and print items with a
-    for item in array:
-        print(f"{symbol} {item}")
+    print(f"{decoration * multiplier} {statement} {decoration * multiplier}")
 
 
 # MAIN ROUTINE BEGINS HERE
@@ -60,12 +46,6 @@ print()
 # if the user wants to view instructions show them
 if show_instructions == "yes":
     styled_statement("INSTRUCTIONS", "-", 3)
-    styled_instructions("-",[
-        "Enter each ticket holder's name, age and payment ",
-        "instruction 2",
-        "instruction 3",
-        "have fun buying tickets??"
-    ])
     print('''For each ticket holder enter ...
 - Their name
 - Their age
@@ -81,21 +61,46 @@ It will also choose one lucky ticket winner who wins the draw (their ticket is f
 
 # begin program
 
-# init ticket numbers
+# init constants
+CHILD_PRICE     = 7.50
+ADULT_PRICE     = 10.50
+SENIOR_PRICE    = 6.50
 
-MAX_TICKETS = 5
-tickets_sold = 0
+MAX_TICKETS     = 5
+
+CREDIT_SURCHARGE = 0.05 # 5% surcharge for purchasing tickets with credit
 
 # loop for selling tickets
+tickets_sold = 0
+
 while tickets_sold < MAX_TICKETS:
     name = input("Name: ")
+
+    # if name is blank, ask again
+    if name == "":
+        print("You must enter a name.")
+        continue
 
     # break if exit code
     if name.lower() == "xxx":
         break
 
-    tickets_sold += 1
+    age = int_check("Age: ", "You must enter an integer!")
+    if 12 <= age <= 120:
+        payment_method = str_checker("Payment method (cash/credit): ", ["cash", "credit"], 2, "Please enter cash or card.")
 
+        print(f"{name} bought a ticket. ({payment_method})")
+
+        tickets_sold += 1
+    elif age < 12 :
+        print(f"{name} is too young.")
+    elif age > 120:
+        print(f"{name} is too old.")
+    else:
+        pass
+    print()
+
+print()
 if tickets_sold == MAX_TICKETS:
     print(f"All {MAX_TICKETS} tickets have been sold.")
 else:
