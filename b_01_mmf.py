@@ -1,4 +1,6 @@
 # DEFINES BEGIN HERE
+import pandas
+
 
 def str_checker(question, available_choices, num_letters, error):
     """returns the string if it meets anything in available_choices"""
@@ -81,6 +83,14 @@ CREDIT_SURCHARGE = 0.05 # 5% surcharge for purchasing tickets with credit
 # loop for selling tickets
 tickets_sold = 0
 
+# ticket dict
+
+mini_movie_dict = {
+    "Name":         [],
+    "Ticket Price": [],
+    "Surcharge":    [],
+}
+
 while tickets_sold < MAX_TICKETS:
     name = not_blank("Name: ", "You must type a name!")
 
@@ -95,17 +105,37 @@ while tickets_sold < MAX_TICKETS:
 
     age = int_check("Age: ", "You must enter an integer!")
     if 12 <= age <= 120:
+
+        if age < 16:  # under 16 discount
+            ticket_price = CHILD_PRICE
+        elif age < 65:  # no discount
+            ticket_price = ADULT_PRICE
+        else:  # senior discount
+            ticket_price = SENIOR_PRICE
+
         payment_method = str_checker("Payment method (cash/credit): ", ["cash", "credit"], 2, "Please enter cash or card.")
 
-        print(f"{name} bought a ticket. ({payment_method})")
+        # payment surcharge
+        surcharge = 0
+
+        if payment_method == "credit":
+            surcharge = ticket_price * CREDIT_SURCHARGE
+
+        # print info to user about payment
+        print(f"{name} has paid ${ticket_price:.2f} for a ticket. ({payment_method})\n"
+              f"surcharge for paying with {payment_method} is ${surcharge:.2f}\n"
+              f"Total: {ticket_price + surcharge:.2f}")
+
+        mini_movie_dict["Name"].append(name)
+        mini_movie_dict["Ticket Price"].append(ticket_price)
+        mini_movie_dict["Surcharge"].append(surcharge)
+
 
         tickets_sold += 1
     elif age < 12 :
         print(f"{name} is too young.")
     elif age > 120:
         print(f"{name} is too old.")
-    else:
-        pass
     print()
 
 print()
@@ -113,3 +143,20 @@ if tickets_sold == MAX_TICKETS:
     print(f"All {MAX_TICKETS} tickets have been sold.")
 else:
     print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
+
+# create pandas frame and append total/profit columns to it
+
+mini_movie_frame = pandas.DataFrame(mini_movie_dict)
+mini_movie_frame["Total"] = mini_movie_frame["Ticket Price"] + mini_movie_frame["Surcharge"]
+mini_movie_frame["Profit"] = mini_movie_frame["Total"] - 5
+
+# calculate total paid and profit
+total_paid = mini_movie_frame["Total"].sum()
+total_profit = mini_movie_frame["Profit"].sum()
+
+# TODO: make pandas print dataframe in 2dp
+
+print(f"Total paid:   ${total_paid:.2f}"
+      f"Total profit: ${total_profit:.2f}")
+
+print(mini_movie_frame)
