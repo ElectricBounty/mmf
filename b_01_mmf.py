@@ -15,6 +15,14 @@ def str_checker(question, available_choices, num_letters, error):
 
         print(error)
 
+def not_blank(question, error):
+    """wrapper for input() that doesn't allow blank responses"""
+    while True:
+        response = input(question)
+        if response != "":
+            return response
+        print(error)
+
 def int_check(question, error):
     """only accept integers"""
 
@@ -74,7 +82,7 @@ CREDIT_SURCHARGE = 0.05 # 5% surcharge for purchasing tickets with credit
 tickets_sold = 0
 
 while tickets_sold < MAX_TICKETS:
-    name = input("Name: ")
+    name = not_blank("Name: ", "You must type a name!")
 
     # if name is blank, ask again
     if name == "":
