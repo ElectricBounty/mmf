@@ -43,6 +43,9 @@ def styled_statement(statement, decoration, multiplier):
     """Displays a statement with a certain number of decorations on each side"""
     print(f"{decoration * multiplier} {statement} {decoration * multiplier}")
 
+def format_currency(x):
+    return f"${x:.2f}"
+
 
 # MAIN ROUTINE BEGINS HERE
 
@@ -154,9 +157,15 @@ mini_movie_frame["Profit"] = mini_movie_frame["Total"] - 5
 total_paid = mini_movie_frame["Total"].sum()
 total_profit = mini_movie_frame["Profit"].sum()
 
+# format everything to be $x
+
+add_dollars = ["Total", "Surcharge", "Profit", "Ticket Price"]
+for var_item in add_dollars:
+    mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(format_currency)
+
 # TODO: make pandas print dataframe in 2dp
 
-print(f"Total paid:   ${total_paid:.2f}"
-      f"Total profit: ${total_profit:.2f}")
-
 print(mini_movie_frame)
+
+print(f"Total paid:   ${total_paid}\n"
+      f"Total profit: ${total_profit}")
