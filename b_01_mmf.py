@@ -1,7 +1,6 @@
-# DEFINES BEGIN HERE
 import pandas
 
-
+# Functions begin here
 def str_checker(question, available_choices, num_letters, error):
     """returns the string if it meets anything in available_choices"""
     while True:
@@ -124,11 +123,6 @@ while tickets_sold < MAX_TICKETS:
         if payment_method == "credit":
             surcharge = ticket_price * CREDIT_SURCHARGE
 
-        # print info to user about payment
-        print(f"{name} has paid ${ticket_price:.2f} for a ticket. ({payment_method})\n"
-              f"surcharge for paying with {payment_method} is ${surcharge:.2f}\n"
-              f"Total: {ticket_price + surcharge:.2f}")
-
         mini_movie_dict["Name"].append(name)
         mini_movie_dict["Ticket Price"].append(ticket_price)
         mini_movie_dict["Surcharge"].append(surcharge)
@@ -142,16 +136,11 @@ while tickets_sold < MAX_TICKETS:
     print()
 
 print()
-if tickets_sold == MAX_TICKETS:
-    print(f"All {MAX_TICKETS} tickets have been sold.")
-else:
-    print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
-
 # create pandas frame and append total/profit columns to it
 
 mini_movie_frame = pandas.DataFrame(mini_movie_dict)
 mini_movie_frame["Total"] = mini_movie_frame["Ticket Price"] + mini_movie_frame["Surcharge"]
-mini_movie_frame["Profit"] = mini_movie_frame["Total"] - 5
+mini_movie_frame["Profit"] = mini_movie_frame["Ticket Price"] - 5
 
 # calculate total paid and profit
 total_paid = mini_movie_frame["Total"].sum()
@@ -163,9 +152,11 @@ add_dollars = ["Total", "Surcharge", "Profit", "Ticket Price"]
 for var_item in add_dollars:
     mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(format_currency)
 
-# TODO: make pandas print dataframe in 2dp
-
 print(mini_movie_frame)
+print(f"\nTotal paid:   ${total_paid:.2f}"
+      f"\nTotal profit: ${total_profit:.2f}\n")
 
-print(f"Total paid:   ${total_paid}\n"
-      f"Total profit: ${total_profit}")
+if tickets_sold == MAX_TICKETS:
+    print(f"All {MAX_TICKETS} tickets have been sold.")
+else:
+    print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
