@@ -1,3 +1,5 @@
+import random
+
 import pandas
 
 # Functions begin here
@@ -146,17 +148,33 @@ mini_movie_frame["Profit"] = mini_movie_frame["Ticket Price"] - 5
 total_paid = mini_movie_frame["Total"].sum()
 total_profit = mini_movie_frame["Profit"].sum()
 
-# format everything to be $x
+# pick random winner from names
+winner = random.choice(mini_movie_dict["Name"])
 
+# get the index of the winner to get their ticket cost from the dataframe
+winner_index = mini_movie_dict["Name"].index(winner)
+
+# ticket cost from the dataframe
+winner_ticket_cost = mini_movie_frame.at[winner_index, "Total"]
+
+# zero out the winners ticket cost
+mini_movie_frame.at[winner_index, "Ticket Price"] = 0
+mini_movie_frame.at[winner_index, "Surcharge"] = 0
+mini_movie_frame.at[winner_index, "Total"] = 0
+mini_movie_frame.at[winner_index, "Profit"] = -5
+
+# format everything to be $x
 add_dollars = ["Total", "Surcharge", "Profit", "Ticket Price"]
 for var_item in add_dollars:
     mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(format_currency)
-
-print(mini_movie_frame)
-print(f"\nTotal paid:   ${total_paid:.2f}"
-      f"\nTotal profit: ${total_profit:.2f}\n")
 
 if tickets_sold == MAX_TICKETS:
     print(f"All {MAX_TICKETS} tickets have been sold.")
 else:
     print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
+
+print(f"The lucky winner is {winner}! Their ticket worth ${winner_ticket_cost:.2f} is free!")
+
+print(mini_movie_frame)
+print(f"\nTotal paid:   ${total_paid:.2f}"
+      f"\nTotal profit: ${total_profit:.2f}\n")
