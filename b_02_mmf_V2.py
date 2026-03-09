@@ -1,5 +1,5 @@
 import random
-
+from datetime import datetime
 import pandas
 
 # Functions begin here
@@ -42,7 +42,7 @@ def int_check(question, error):
 
 def styled_statement(statement, decoration, multiplier):
     """Displays a statement with a certain number of decorations on each side"""
-    print(f"{decoration * multiplier} {statement} {decoration * multiplier}")
+    return f"{decoration * multiplier} {statement} {decoration * multiplier}"
 
 def format_currency(x):
     return f"${x:.2f}"
@@ -50,7 +50,7 @@ def format_currency(x):
 
 # MAIN ROUTINE BEGINS HERE
 
-styled_statement("MINI MOVIE FUNDRAISER", "*", 5)
+print(styled_statement("MINI MOVIE FUNDRAISER", "*", 5))
 
 # instructions
 show_instructions = str_checker("Would you like to view the instructions? ", ["yes","no"],1,"Please enter yes or no.")
@@ -59,7 +59,7 @@ print()
 
 # if the user wants to view instructions show them
 if show_instructions == "yes":
-    styled_statement("INSTRUCTIONS", "-", 3)
+    print(styled_statement("INSTRUCTIONS", "-", 3))
     print('''For each ticket holder enter ...
 - Their name
 - Their age
@@ -172,8 +172,37 @@ if tickets_sold == MAX_TICKETS:
 else:
     print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
 
-print(f"The lucky winner is {winner}! Their ticket worth ${winner_ticket_cost:.2f} is free!")
+winner_statement = f"The lucky winner is {winner}! Their ticket worth ${winner_ticket_cost:.2f} is free!"
+print(winner_statement)
 
 print(mini_movie_frame)
 print(f"\nTotal paid:   ${total_paid:.2f}"
       f"\nTotal profit: ${total_profit:.2f}\n")
+
+# printing the receipt
+receipt = str_checker("Would you like to save your receipt as a .txt file? ", ["yes","no"],1,"Please enter yes or no.")
+
+print()
+
+# if the user wants to view instructions show them
+if receipt == "yes":
+    # define filename
+    file_name = "mmf_receipt"
+    formatted_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    write_to = "{}_{}.txt".format(file_name, formatted_time)
+
+    text_file = open(write_to, "w+")
+
+    # things to write to our file
+    heading = styled_statement("Mini Movie Fundraiser", "=", 3)
+    content = mini_movie_frame.to_string()
+    newline = "\n"
+
+    # list of strings
+    to_write = [heading, content, foo]
+
+    # print to file
+    for item in to_write:
+        text_file.write(item)
+        text_file.write("\n")
+
