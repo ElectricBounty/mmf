@@ -167,17 +167,21 @@ add_dollars = ["Total", "Surcharge", "Profit", "Ticket Price"]
 for var_item in add_dollars:
     mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(format_currency)
 
+mini_movie_string = mini_movie_frame.to_string(index=False)
+
 if tickets_sold == MAX_TICKETS:
-    print(f"All {MAX_TICKETS} tickets have been sold.")
+    tickets_sold_text = f"All {MAX_TICKETS} tickets were sold."
 else:
-    print(f"{tickets_sold}/{MAX_TICKETS} tickets have been sold.")
+    tickets_sold_text= f"{tickets_sold}/{MAX_TICKETS} tickets were sold."
 
-winner_statement = f"The lucky winner is {winner}! Their ticket worth ${winner_ticket_cost:.2f} is free!"
-print(winner_statement)
-
-print(mini_movie_frame)
-print(f"\nTotal paid:   ${total_paid:.2f}"
+winner_text = f"The lucky winner is {winner}! Their ticket worth ${winner_ticket_cost:.2f} is free!"
+total_text = (f"\nTotal paid:   ${total_paid:.2f}"
       f"\nTotal profit: ${total_profit:.2f}\n")
+
+print(tickets_sold_text)
+print(winner_text)
+print(mini_movie_string)
+print(total_text)
 
 # printing the receipt
 receipt = str_checker("Would you like to save your receipt as a .txt file? ", ["yes","no"],1,"Please enter yes or no.")
@@ -193,13 +197,18 @@ if receipt == "yes":
 
     text_file = open(write_to, "w+")
 
-    # things to write to our file
-    heading = styled_statement("Mini Movie Fundraiser", "=", 3)
-    content = mini_movie_frame.to_string()
-    newline = "\n"
-
-    # list of strings
-    to_write = [heading, content, foo]
+    # list of strings to be included in the output of the file
+    to_write = [
+        styled_statement("Mini Movie Fundraiser Receipt", "=", 3),
+        datetime.now().strftime("%d/%m/%Y %H:%M\n"),
+        styled_statement("Ticket Details", "-", 3),
+        mini_movie_string,
+        total_text,
+        "\n{}".format(styled_statement("Raffle Winner", "-", 4)),
+        winner_text,
+        "The ticket details have already been adjusted to take into account the winner.\n",
+        tickets_sold_text
+    ]
 
     # print to file
     for item in to_write:
